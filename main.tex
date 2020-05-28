@@ -1,0 +1,62 @@
+\documentclass[a4paper,12pt,twoside,openright]{chalmersthesis}
+\input{include/Settings.tex}
+%\input{include/Papers.tex}
+
+\usepackage[sort&compress,numbers]{natbib}
+
+\usepackage{lipsum}
+
+%
+% ****** Beginning of file ******
+\begin{document}
+% Roman numerals
+\pagenumbering{roman}
+
+% Make Title Page
+\maketitle
+
+% Abstract
+\input{include/frontmatter/Abstract.tex}
+
+% Acknowledgments
+\input{include/frontmatter/Acknowledgment.tex}
+
+% Publications
+\input{include/frontmatter/Publications.tex}
+
+% No numerals for the TOC
+\pagenumbering{gobble}
+% Table of contents
+\tableofcontents
+\clearpage{\pagestyle{plain}\cleardoublepage}
+
+% Arabic numerals
+\pagenumbering{arabic}
+
+%
+% ****** Chapters ******
+\input{include/Introduction.tex}
+\input{include/Summary.tex}
+
+%
+% ****** References ******
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\nocite{*} % Prints out all citations
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
+
+%
+% ****** Appendix ******
+\cleardoublepage
+\appendix
+\input{include/Appendix.tex}
+
+%
+% ****** Append papers ******
+\input{include/backmatter/Papers.tex}
+
+\end{document}
+%
+% ****** End of file ******

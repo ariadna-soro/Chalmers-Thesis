@@ -1,0 +1,16 @@
+% !TEX root = ../../main.tex
+
+\newcommand{\paperitem}[1]{~\hfill\textbf{\Huge{Paper~#1}}\\[15mm]}
+\phantomsection
+\addcontentsline{toc}{chapter}{Included papers}
+
+\cleardoublepage
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\@chapapp}{\vspace*{50mm}\hfill Paper}
+\makeatother
+
+\addcontentsline{toc}{section}{Paper A}
+\IncludePaper{\PaperA}
+\cleardoublepage
+\includepdf[pages={-}]{include/papers/PaperA.pdf}
