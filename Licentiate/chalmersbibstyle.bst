@@ -1894,13 +1894,14 @@ FUNCTION {string.enquote}
 
 FUNCTION {format.title}
 { title
-  duplicate$ empty$ 'skip$ { "t" change.case$ } if$
-  duplicate$ "title" bibinfo.check swap$
-  duplicate$ empty$ 'pop$
+  duplicate$ empty$ 'skip$
+    { "t" change.case$ }
+  if$
+  "title" bibinfo.check
+  duplicate$ empty$ 'skip$
     {
-      punctuation.yes 'punctuation.state :=
-      pop$
-      select.language
+      "\enquote{" swap$ *
+      add.comma$ "}" *
     }
   if$
 }
@@ -2275,16 +2276,6 @@ FUNCTION {format.pages}
   if$
 }
 
-FUNCTION {first.page}
-{ 't :=
-  ""
-    {  t empty$ not t #1 #1 substring$ "-" = not and }
-    { t #1 #1 substring$ *
-      t #2 global.max$ substring$ 't :=
-    }
-  while$
-}
-
 FUNCTION {format.book.pages}
 {
   pages duplicate$ empty$ 'skip$
@@ -2618,6 +2609,8 @@ FUNCTION {article}
   new.block.comma
   article.title.produce
   output.article.booktitle
+  format.title "title" output.check
+  new.block.comma
   crossref missing$
 %% Handle special case of SISSA journals which require an issue number for unique citations and use volume/year interchangably
     {
@@ -2918,11 +2911,11 @@ FUNCTION {misc}
   link.shut
   new.block.comma
   howpublished "howpublished" bibinfo.check output
-  format.date.output
   new.block.comma
   new.sentence.comma
   format.note output
   format.eprint output
+  format.date.output
   fin.entry
 }
 
@@ -2973,6 +2966,9 @@ FUNCTION {presentation}
 
 FUNCTION {proceedings}
 { output.bibitem
+  format.authors output
+  author format.key output
+  new.block.comma
   format.editors output
   editor format.key output
   new.block.comma
