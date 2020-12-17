@@ -1,13 +1,41 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{chalmersthesis}[2020/05/26 Licentiate Thesis class for Chalmers]
 \typeout{Licentiate thesis class for Chalmers by Pontus Vikstål - v 1.0}
+
+% Custom package options
+\DeclareOption{print}{
+  \PassOptionsToPackage{hidelinks}{hyperref}
+}
+
+% Custom package options
+\DeclareOption{online}{
+  \PassOptionsToPackage{%
+    colorlinks = true,
+    citecolor = blue,
+    linkcolor = blue,
+  }{hyperref}
+}
+
+% Fallback
+\DeclareOption*{
+  \ClassWarning{chalmersthesis}{Unknown option '\CurrentOption'}
+}
+
+% Execute default options
+\ExecuteOptions{online}
+
+% Process given options
+\ProcessOptions\relax
+
+% Load base
 \LoadClass{book}
 
 %----------------------------
 %	 REQUIRED PACKAGES
 %----------------------------
-\RequirePackage[utf8]{inputenc}
-\RequirePackage[swedish,english]{babel}
+
+% hyperlinks
+\RequirePackage{hyperref}
 
 % control layout of itemize, enumerate, description
 \RequirePackage{enumitem}
@@ -18,28 +46,19 @@
 % if... then... else... constructs
 \RequirePackage{ifthen}
 
-% include pdf documents in Latex
-\RequirePackage{pdfpages}
-
-% color
-\RequirePackage{xcolor}
-
 % enhanced support for graphics
 \RequirePackage{graphicx}
 
-% hyperlinks
-\RequirePackage{hyperref}
-\hypersetup{colorlinks	= true,
-				    citecolor		= blue,
-				    linkcolor		= blue,
-				    pdfauthor		= {DOE John, john.doe@chalmers.se},
-				    pdfsubject	= {2020 John Licentiate Thesis},
-				    pdftitle		= {2020 John Licentiate Thesis}
-}
+% include pdf documents in Latex
+\RequirePackage{pdfpages} 
 
 % select alternative section titles
 \RequirePackage{titlesec}
 \titleformat{\chapter}[block] {\sffamily\Huge\bfseries}{\thechapter}{20pt}{\Huge}
+\titleformat*{\section}{\sffamily\LARGE\bfseries}
+\titleformat*{\subsection}{\sffamily\Large\bfseries}
+\titlespacing{\subsubsection}{0pt}{1em}{0pt}
+\RequirePackage{changepage}
 
 % modify headers and footers
 \RequirePackage{fancyhdr}
@@ -58,6 +77,15 @@
 	\fancyhead{}% Clear
 	\fancyfoot{}
 	\fancyfoot[LE,RO]{\thepage}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% Redefine plain pagestyle
+\fancypagestyle{frontmatter}{
+	\fancyhead{}% Clear
+	\fancyfoot{}
+	\fancyfoot[C]{\thepage}
 	\renewcommand{\headrulewidth}{0pt}
 	\renewcommand{\footrulewidth}{0pt}
 }
@@ -98,11 +126,10 @@
   \thispagestyle{empty}
   \begin{center}
     \large
-    \textsc{Thesis for the degree of \@Degree} \\ [20mm]
+    \textsc{thesis for the degree of \@Degree} \\ [20mm]
     \LARGE
-    \textsc{\@Title} \\ [15mm]
+    {\@Title} \\ [15mm]
 		\MakeUppercase{\normalsize \@Name}\\[20mm]
-		\includegraphics[width=30mm]{figures/titlepage/AvancezChalmers_black_centered.eps}\\[15mm]
 		\vfill
 	  \large
 	  \@Department \\
@@ -187,7 +214,6 @@
 
 %================BEGIN ABSTRACT=================
 \newenvironment{abstract}{%
-	\thispagestyle{plain}
 	\phantomsection
 	\addcontentsline{toc}{chapter}{Abstract}
 	\begingroup
@@ -202,6 +228,7 @@
 	 \par}
 
 	\chapter*{Abstract}
+	\thispagestyle{frontmatter}
 	\setcounter{page}{1}
 }%
 {
@@ -210,7 +237,7 @@
 	\textbf{Keywords: }\@Keywords
 	\endgroup
 	\vfill
-	\clearpage{\pagestyle{plain}\cleardoublepage}
+	\clearpage{\pagestyle{frontmatter}\cleardoublepage}
 }
 %================END ABSTRACT=================
 
@@ -218,14 +245,15 @@
 \newenvironment{acknowledgment}{%
 	\thispagestyle{plain}
 	\chapter*{Acknowledgments}
+	\thispagestyle{frontmatter}
 	\phantomsection
 	\addcontentsline{toc}{chapter}{Acknowledgments}
 }%
 {
-	\\
+	\\[\baselineskip]
 	\hspace*{\fill}
 	\@Name, \@City, \@Copyrightmonth\, \@Copyrightyear
-	\clearpage{\pagestyle{plain}\cleardoublepage}
+	\clearpage{\pagestyle{frontmatter}\cleardoublepage}
 }
 %================END ACKNOWLEDGMENT=================
 
@@ -234,98 +262,14 @@
 	\phantomsection
 	\addcontentsline{toc}{chapter}{Publications}
 	\chapter*{Publications}
+	\thispagestyle{frontmatter}
 	\begin{enumerate}[label=\textbf{\Alph*}, ref={\Alph*}, font=\Large, labelsep=1.5cm]
 }%
 {
 	\end{enumerate}
-	\clearpage{\pagestyle{plain}\cleardoublepage}
+	\clearpage{\pagestyle{frontmatter}\cleardoublepage}
 }
 %================END PUBLICATIONS=================
 
-
-% Define storage of strings, for storing included papers
-%%%%%%%%%%%%%%%%%%
-\newcount\tmpnum
-\def\storedata#1#2{\tmpnum=0 \edef\tmp{\string#1}\storedataA#2\end}
-\def\storedataA#1{\advance\tmpnum by1
-   \ifx\end#1\else
-      \expandafter\def\csname data:\tmp:\the\tmpnum\endcsname{#1}%
-      \expandafter\storedataA\fi
-}
-\def\getdata[#1]#2{\csname data:\string#2:#1\endcsname}
-
-%\storedata\mydata{{one}{two}{three}}
-%\getdata[1]\mydata
-%%%%%%%%%%%%%%%%%%
-
-\newcommand{\getLabel}[1]{\getdata[1]#1}
-\newcommand{\getAuthors}[1]{\getdata[2]#1}
-\newcommand{\getTitle}[1]{\getdata[3]#1}
-\newcommand{\getJournal}[1]{\getdata[4]#1}
-\newcommand{\getURL}[1]{\getdata[5]#1}
-\newcommand{\getPath}[1]{\getdata[6]#1}
-\newcommand{\getStartPage}[1]{\getdata[7]#1}
-\newcommand{\getStopPage}[1]{\getdata[8]#1}
-\newcommand{\getComment}[1]{\getdata[9]#1}
-
-%\newcommand{\IncludePaper}[4]{#1, \newblock \emph{#2}, \newblock #3.\\ \newblock \url{#4}}
-\newcommand{\IncludedPaper}[1]{
-	\label{\getLabel{#1}}
-	{\bf\getTitle{#1}}\\
-	\newblock \getAuthors{#1}\\
-	\newblock \href{\getURL{#1}}
-	{\getJournal{#1}}\\
-	\newblock \getComment{#1}
-}
-
-
-%% this is called in the publications section: publications.tex
-\newcommand{\IncludedPaperArxiv}[1]{
-	\label{\getLabel{#1}}
-	{\bf\getTitle{#1}}\\
-	\newblock \getAuthors{#1}\\
-	\newblock \href{\getURL{#1}}{\getJournal{#1}}\\
-	\newblock \getComment{#1}
-}
-
-
-
-\newcommand{\PaperContribution}[2]{
-	\section*{Paper \ref*{\getLabel{#1}}}
-	{\bf \getTitle{#1}}
-
-	#2
-	%
-	%\emph{#3}
-}
-
-%% called in include_papers.tex
-
-\newcommand{\IncludePaper}[1]{
-	\phantomsection
-	%\addcontentsline{toc}{section}{Paper \ref*{\getLabel{#1}}}
-	\vspace*{60mm}
-	~\hfill\textbf{\Huge\sffamily{Paper~\ref*{\getLabel{#1}}}}\\[15mm]
-	{\bf\getTitle{#1}}\\
-	\newblock \getAuthors{#1}\\
-	\newblock \getJournal{#1}\\
-	\newblock \url{\getURL{#1}}
-	\vfill
-}
-
-
-\newcommand{\IncludePaperArxiv}[1]{
-	\phantomsection
-	%\addcontentsline{toc}{section}{Paper \ref*{\getLabel{#1}}}
-	\vspace*{60mm}
-	~\hfill\textbf{\Huge\sffamily{Paper~\ref*{\getLabel{#1}}}}\\[15mm]
-	{\bf\getTitle{#1}}\\
-	\newblock \getAuthors{#1}\\
-	%\newblock \getJournal{#1}\\
-	\newblock \url{\getURL{#1}}\\
-	\newblock \getComment{#1}
-	\vfill
-	\cleardoublepage
-	\includepdf[pages=\getStartPage{#1}-\getStopPage{#1}]{\getPath{#1}}
-	\cleardoublepage
-}
+% this must be the last command.
+\endinput

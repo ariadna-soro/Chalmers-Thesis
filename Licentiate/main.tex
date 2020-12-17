@@ -1,57 +1,55 @@
 \documentclass[a4paper,12pt,twoside,openright]{chalmersthesis}
+% use the `print` option in the documentclass make all links black
 \input{include/Settings.tex}
-%\input{include/Papers.tex}
-
-\usepackage[sort&compress,numbers]{natbib}
-
-\usepackage{lipsum}
-
 %
 % ****** Beginning of file ******
+\bibliographystyle{chalmersbibstyle}
 \begin{document}
 % Roman numerals
 \pagenumbering{roman}
-
 % Make Title Page
 \maketitle
-
 % Abstract
 \input{include/frontmatter/Abstract.tex}
-
 % Acknowledgments
 \input{include/frontmatter/Acknowledgment.tex}
-
 % Publications
 \input{include/frontmatter/Publications.tex}
-
-% No numerals for the TOC
+% No numerals for the Table of contents
 \pagenumbering{gobble}
 % Table of contents
 \tableofcontents
 \clearpage{\pagestyle{plain}\cleardoublepage}
-
 % Arabic numerals
 \pagenumbering{arabic}
 
 %
 % ****** Chapters ******
-\input{include/Introduction.tex}
-\input{include/Summary.tex}
+
+%=============================================
+%               INTRODUCTION
+%=============================================
+\chapter{\label{chap:introduction}Introduction}
+\lipsum[6-8] \cite{Kenfack2004Aug}
+
+%=============================================
+%                   SUMMARY
+%=============================================
+\chapter{\label{chap:Summary}Summary of papers}
+\lipsum[6-8]
 
 %
 % ****** References ******
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
-\nocite{*} % Prints out all citations
-\bibliographystyle{apsrev4-2}
 \bibliography{references}
 
 %
 % ****** Appendix ******
 \cleardoublepage
 \appendix
-\input{include/Appendix.tex}
+\input{include/backmatter/Appendix.tex}
 
 %
 % ****** Append papers ******
