@@ -131,9 +131,11 @@
 
 % print stored paper info
    \newcommand*{\paper}[1]{
+   \begin{minipage}{\textwidth}
        {\bf \getdata[1]#1} \\
     \newblock \getdata[2]#1\\
     \newblock \href{\getdata[3]#1}{\getdata[4]#1}
+    \end{minipage}
    }
 
 %================BEGIN TITLE PAGE=================
