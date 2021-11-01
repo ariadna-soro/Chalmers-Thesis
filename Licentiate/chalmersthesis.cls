@@ -50,7 +50,7 @@
 \RequirePackage{graphicx}
 
 % include pdf documents in Latex
-\RequirePackage{pdfpages} 
+\RequirePackage{pdfpages}
 
 % select alternative section titles
 \RequirePackage{titlesec}
@@ -119,6 +119,24 @@
 \newcommand{\PrintService}[1]{\def\@PrintService{#1}}
 \newcommand{\Keywords}[1]{\def\@Keywords{#1}}
 
+% store data in object
+\newcount\tmpnum
+\def\storedata#1#2{\tmpnum=0 \edef\tmp{\string#1}\storedataA#2\end}
+\def\storedataA#1{\advance\tmpnum by1
+   \ifx\end#1\else
+      \expandafter\def\csname data:\tmp:\the\tmpnum\endcsname{#1}%
+      \expandafter\storedataA\fi
+}
+\def\getdata[#1]#2{\csname data:\string#2:#1\endcsname}
+
+% print stored paper info
+   \newcommand*{\paper}[1]{
+   \begin{minipage}{\textwidth}
+       {\bf \getdata[1]#1} \\
+    \newblock \getdata[2]#1\\
+    \newblock \href{\getdata[3]#1}{\getdata[4]#1}
+    \end{minipage}
+   }
 
 %================BEGIN TITLE PAGE=================
 \renewcommand{\maketitle}{
