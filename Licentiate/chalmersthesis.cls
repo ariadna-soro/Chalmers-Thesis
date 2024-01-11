@@ -57,7 +57,7 @@
 \titleformat{\chapter}[block] {\sffamily\Huge\bfseries}{\thechapter}{20pt}{\Huge}
 \titleformat*{\section}{\sffamily\LARGE\bfseries}
 \titleformat*{\subsection}{\sffamily\Large\bfseries}
-\titlespacing{\subsubsection}{0pt}{1em}{0pt}
+\titleformat*{\subsubsection}{\sffamily\bfseries}
 \RequirePackage{changepage}
 
 % modify headers and footers
