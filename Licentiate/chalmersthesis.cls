@@ -171,11 +171,10 @@
 		Technical Report \ \@ReportNr \\
 		ISSN \@ISSN \\
 		\vspace{2cm}
-		\@Division \\
-		\@Department \\
 		\@Uni \\
-		\@Postcode \ \@City \\
-		\@Country \\
+		\@Department \\
+		\@Division \\
+		\@Postcode \ \@City \ \@Country \\
 		Telephone \@Telephone \\[10mm]
 	\end{flushleft} %
 	\vfill
